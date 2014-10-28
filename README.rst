@@ -1,4 +1,4 @@
-
+.. -*- restructuredtext -*-
 
 Timebook
 ========
