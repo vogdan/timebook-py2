@@ -567,16 +567,53 @@ def format_timebook(db, sheet, where, group='off'):
     if group == 'off':
         cmdutil.pprint_table(table, footer_row=True)
     else:
+        # group format is on
+        def str2delta(t):
+            dt = datetime.strptime(t, '%H:%M:%S')
+            return timedelta(hours=dt.hour, 
+                             minutes=dt.minute, 
+                             seconds=dt.second)
+        format_delta = lambda d: cmdutil.timedelta_hms_display(d)
         new_table = [table[0]]
-        match_dict = {'regression': [], 
-                      'tickets': [], 
-                      'issues': [], 
-                      'setup': [],
-                      'California': []}
-        for row in table:
+        match_dict = {
+            'regression': [], 
+            'tickets': [], 
+            'issues': [], 
+            'enviro': [],
+            'California': [],
+            '6.32':[],
+            'others': []
+            }
+        prev_descr = ''
+        for row in [entry for entry in table[1:] if entry[1] != '']:
+            matched = 0
             for key in match_dict:
-                if key in row[3]:
+                description = row[3]
+                if description == '':
+                    description = prev_descr
+                if key in description:
                     match_dict[key].append(row[2:])
-                continue
+                    matched = 1
+                    prev_descr = description
+                    break
+            if matched == 0:
+                match_dict['others'].append(row[2:])
+        grand_total = timedelta(0)
         for key in match_dict:
-            print "{}: {}".format(key, match_dict[key])
+            sub_total = timedelta(0)
+            comments = ''
+            for row in match_dict[key]:
+                duration = row[0]
+                comment = row[1]
+                sub_total += str2delta(duration)
+                if key == 'others':
+                    comments += "{}~{}\n".format(duration,
+                                                      comment)
+                if comment not in comments:
+                    comments += "{}\n".format(comment)
+
+            print "{}: {}".format(key, format_delta(sub_total))
+            print comments
+            grand_total += sub_total
+        print "-- GRAND TOTAL: {}".format(format_delta(grand_total))
+        print "-- should be -: {}".format(total)
