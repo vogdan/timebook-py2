@@ -582,22 +582,23 @@ def format_timebook(db, sheet, where, group='off'):
             'enviro': [],
             'California': [],
             '6.32':[],
-            'others': []
+            'OTHERS': []
             }
         prev_descr = ''
+        # cycle through all lines except the ones containing totals
         for row in [entry for entry in table[1:] if entry[1] != '']:
             matched = 0
+            description = row[3]
             for key in match_dict:
-                description = row[3]
                 if description == '':
                     description = prev_descr
                 if key in description:
                     match_dict[key].append(row[2:])
-                    matched = 1
                     prev_descr = description
+                    matched = 1
                     break
             if matched == 0:
-                match_dict['others'].append(row[2:])
+                match_dict['OTHERS'].append(row[2:])
         grand_total = timedelta(0)
         for key in match_dict:
             sub_total = timedelta(0)
@@ -606,11 +607,11 @@ def format_timebook(db, sheet, where, group='off'):
                 duration = row[0]
                 comment = row[1]
                 sub_total += str2delta(duration)
-                if key == 'others':
+                if key == 'OTHERS':
                     comments += "{}~{}\n".format(duration,
-                                                      comment)
-                if comment not in comments:
-                    comments += "{}\n".format(comment)
+                                                 comment)
+                elif comment not in comments:
+                        comments += "{}\n".format(comment)
 
             print "{}: {}".format(key, format_delta(sub_total))
             print comments
