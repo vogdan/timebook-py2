@@ -425,8 +425,9 @@ ending before 00:00 on this date. The date should be of the format \
 YYYY-MM-DD.')
     parser.add_option('-f', '--format', dest='format', type='string',
                   default='plain',
-                  help="Select whether to output in the normal timebook \
-style (--format=plain) or csv --format=csv")
+                  help='''Select whether to output in the normal timebook
+style (--format=plain), csv --format=csv or group --format=group (groups 
+periods by common words in description and calculates total hours per group)''')
     opts, args = parser.parse_args(args=args)
 
     # grab correct sheet
@@ -449,6 +450,8 @@ style (--format=plain) or csv --format=csv")
         format_timebook(db, sheet, where)
     elif opts.format == 'csv':
         format_csv(db, sheet, where)
+    elif opts.format == 'group':
+        format_timebook(db, sheet, where, group='on')
     else:
         raise SystemExit, 'Invalid format: %s' % opts.format
 
@@ -478,7 +481,7 @@ def format_csv(db, sheet, where):
     total_formula = '=SUM(C2:C%d)/3600' % (len(rows) + 1)
     writer.writerow(('Total', '', total_formula, ''))
 
-def format_timebook(db, sheet, where):
+def format_timebook(db, sheet, where, group='off'):
     db.execute(u'''
     select count(*) > 0 from entry where sheet = ?%s
     ''' % where, (sheet,))
@@ -561,4 +564,19 @@ def format_timebook(db, sheet, where):
     total = displ_total(db.fetchone()[0])
     table += [['', '', displ_total(day_total), ''],
               ['Total', '', total, '']]
-    cmdutil.pprint_table(table, footer_row=True)
+    if group == 'off':
+        cmdutil.pprint_table(table, footer_row=True)
+    else:
+        new_table = [table[0]]
+        match_dict = {'regression': [], 
+                      'tickets': [], 
+                      'issues': [], 
+                      'setup': [],
+                      'California': []}
+        for row in table:
+            for key in match_dict:
+                if key in row[3]:
+                    match_dict[key].append(row[2:])
+                continue
+        for key in match_dict:
+            print "{}: {}".format(key, match_dict[key])
