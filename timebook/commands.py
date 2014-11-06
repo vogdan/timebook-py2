@@ -427,7 +427,7 @@ YYYY-MM-DD.')
                   default='plain',
                   help='''Select whether to output in the normal timebook
 style (--format=plain), csv --format=csv or group --format=group (groups 
-periods by common words in description and calculates total hours per group)''')
+periods by custom words in description and calculates total hours per group)''')
     opts, args = parser.parse_args(args=args)
 
     # grab correct sheet
@@ -608,12 +608,13 @@ def format_timebook(db, sheet, where, group='off'):
                 comment = row[1]
                 sub_total += str2delta(duration)
                 if key == 'OTHERS':
-                    comments += "{}~{}\n".format(duration,
+                    comments += "\t{}~{}\n".format(duration,
                                                  comment)
                 elif comment not in comments:
-                        comments += "{}\n".format(comment)
+                        comments += "\t{}\n".format(comment)
 
-            print "{}: {}".format(key, format_delta(sub_total))
+            print "Task: {}\nHours: {}\nComments:".format(key, 
+                                                          format_delta(sub_total))
             print comments
             grand_total += sub_total
         print "-- GRAND TOTAL: {}".format(format_delta(grand_total))
