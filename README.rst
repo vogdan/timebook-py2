@@ -45,6 +45,12 @@ The basic usage is as follows::
   
 Usage examples::
 
+  $ t s writing
+  $ t i document timebook
+  $ t o
+
+and their equivalents::
+
   $ t switch writing
   $ t in document timebook
   $ t out
@@ -57,7 +63,7 @@ would be in error if the ``writing`` timesheet was already active.
 Finally, ``t out`` records the current time as the end time for the
 most recent period in the ``writing`` timesheet.
 
-To display the current timesheet, invoke the ``t display`` command::
+To display the current timesheet, invoke the ``t d`` or ``t display`` command::
 
   $ t display
   Timesheet writing:
