@@ -576,12 +576,12 @@ def format_timebook(db, sheet, where, group='off'):
         format_delta = lambda d: cmdutil.timedelta_hms_display(d)
         new_table = [table[0]]
         match_dict = {
-            'regression': [], 
-            'tickets': [], 
-            'issues': [], 
-            'enviro': [],
-            'California': [],
+            'UTIL': [], 
+            '7.0': [], 
+            'WES': [],
+            'USP': [],
             '6.32':[],
+            'REG': [],
             'OTHERS': []
             }
         prev_descr = ''
