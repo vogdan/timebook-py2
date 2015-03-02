@@ -605,7 +605,7 @@ def format_timebook(db, sheet, where, group='off'):
             comments = ''
             for row in match_dict[key]:
                 duration = row[0]
-                comment = row[1]
+                comment = row[1].encode('ascii', 'ignore')
                 sub_total += str2delta(duration)
                 if key == 'OTHERS':
                     comments += "\t{}~{}\n".format(duration,
