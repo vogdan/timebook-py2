@@ -577,10 +577,11 @@ def format_timebook(db, sheet, where, group='off'):
         new_table = [table[0]]
         match_dict = {
             'UTIL': [], 
+            'SCRIPTS': [],
             '7.0': [], 
             'WES': [],
             'USP': [],
-            '6.32':[],
+            '6.3':[],
             'REG': [],
             'OTHERS': []
             }
