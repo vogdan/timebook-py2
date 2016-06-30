@@ -25,6 +25,8 @@ from datetime import datetime, timedelta
 from functools import wraps
 from gettext import ngettext
 from optparse import OptionParser
+from shutil import copyfile
+from os.path import basename, join
 import os
 import subprocess
 import sys
@@ -90,7 +92,14 @@ def backend(db, args):
     parser = OptionParser(usage='''usage: %prog backend
 
 Run an interactive database session on the timebook database. Requires
-the sqlite3 command.''')
+the sqlite3 command. Backup database prior to that.''')
+    #backup db beforehand
+    backpath = '/tmp/timebook/backup/'
+    backname = "-".join([basename(db.path), 
+                         datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S')])
+    os.makedirs(backpath)
+    copyfile(db.path, join(backpath, backname))
+    print "Database has been backed up at {}".format(join(backpath, backname))
     subprocess.call(('sqlite3', db.path))
 
 @command('start the timer for the current timesheet', name='in',
