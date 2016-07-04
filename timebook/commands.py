@@ -97,7 +97,10 @@ the sqlite3 command. Backup database prior to that.''')
     backpath = '/tmp/timebook/backup/'
     backname = "-".join([basename(db.path), 
                          datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S')])
-    os.makedirs(backpath)
+    try:
+        os.makedirs(backpath)
+    except OSError:
+        pass
     copyfile(db.path, join(backpath, backname))
     print "Database has been backed up at {}".format(join(backpath, backname))
     subprocess.call(('sqlite3', db.path))
