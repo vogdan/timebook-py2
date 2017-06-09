@@ -26,7 +26,8 @@ from functools import wraps
 from gettext import ngettext
 from optparse import OptionParser
 from shutil import copyfile
-from os.path import basename, join
+from os.path import basename, join, expanduser
+
 import os
 import subprocess
 import sys
@@ -93,8 +94,8 @@ def backend(db, args):
 
 Run an interactive database session on the timebook database. Requires
 the sqlite3 command. Backup database prior to that.''')
-    #backup db beforehand
-    backpath = '/tmp/timebook/backup/'
+    #backup db beforehand in user home
+    backpath = expanduser(join("~", ".timebook", "backup"))
     backname = "-".join([basename(db.path), 
                          datetime.strftime(datetime.now(), '%Y%m%d_%H%M%S')])
     try:
