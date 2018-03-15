@@ -589,14 +589,12 @@ def format_timebook(db, sheet, where, group='off'):
         format_delta = lambda d: cmdutil.timedelta_hms_display(d)
         new_table = [table[0]]
         match_dict = {
-            'UTIL': [], 
             'SCRIPTS': [],
-            '7.0': [], 
             'WES': [],
             'USP': [],
-            '6.3':[],
             'REG': [],
-            'OTHERS': []
+            'OTHERS': [],
+            'QA': []
             }
         prev_descr = ''
         # cycle through all lines except the ones containing totals
