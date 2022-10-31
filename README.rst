@@ -9,6 +9,12 @@ time logs of work for presentation to a client, or simply track how you
 spend your free time. Timebook is implemented as a python script which
 maintains its state in a sqlite3 database.
 
+Prerequisites
+~~~~~~~~
+
+* Python 2.7
+* sqlite3
+
 Concepts
 ~~~~~~~~
 
