@@ -13,7 +13,7 @@ Prerequisites
 ~~~~~~~~
 
 * Python 2.7
-* sqlite3
+* sqlite3 (for the ``backend`` option)
 
 Concepts
 ~~~~~~~~
